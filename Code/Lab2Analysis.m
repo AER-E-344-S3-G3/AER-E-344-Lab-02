@@ -2,6 +2,7 @@
 % Section 3 Group 3
 clear, clc, close all;
 
+figure_dir = "../Figures/";
 u = symunit;
 
 %% Import Data
@@ -55,7 +56,7 @@ hold off;
 legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
 grid on;
 saveas(gcf, ...
-    "../Figures/Dynamic Pressure vs Change in Static Pressure.svg");
+    figure_dir + "Dynamic Pressure vs Change in Static Pressure.svg");
 
 %% Calculate v_T
 v_T = sqrt(2 * q_T / rho_air); % [m/s]
@@ -78,4 +79,4 @@ plot(regress_2_x, regress_2_y);
 hold off;
 legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
 grid on;
-saveas(gcf, "../Figures/Test Chamber Velocity vs Motor Frequency.svg");
+saveas(gcf, figure_dir + "Test Chamber Velocity vs Motor Frequency.svg");
