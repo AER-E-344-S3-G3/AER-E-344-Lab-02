@@ -5,20 +5,20 @@ clear, clc, close all;
 u = symunit;
 
 %% Import Data
-Data_Sheet = readtable('AER E 344 Lab 02 Data Sheet.xlsx', ...
+data_sheet = readtable('AER E 344 Lab 02 Data Sheet.xlsx', ...
     'VariableNamingRule', 'preserve');
-omega_motor = Data_Sheet.("Motor speed [Hz]").'; % [Hz]
+omega_motor = data_sheet.("Motor speed [Hz]").'; % [Hz]
 H_ref = double(separateUnits(unitConvert( ...
-    Data_Sheet.("H_ref [in.]").' * u.in, u.m))); % [m]
+    data_sheet.("H_ref [in.]").' * u.in, u.m))); % [m]
 H_A = double(separateUnits(unitConvert( ...
-    Data_Sheet.("H_A [in.]").' * u.in, u.m))); % [m]
+    data_sheet.("H_A [in.]").' * u.in, u.m))); % [m]
 H_E = double(separateUnits(unitConvert( ...
-    Data_Sheet.("H_E [in.]").' * u.in, u.m))); % [m]
+    data_sheet.("H_E [in.]").' * u.in, u.m))); % [m]
 H_total = double(separateUnits(unitConvert( ...
-    Data_Sheet.("H_total [in.]").' * u.in, u.m))); % [m]
+    data_sheet.("H_total [in.]").' * u.in, u.m))); % [m]
 H_static = double(separateUnits(unitConvert( ...
-    Data_Sheet.("H_static [in.]").' * u.in, u.m))); % [m]
-T_tunnel = Data_Sheet.("T_tunnel [deg C]").'; % [ºC]
+    data_sheet.("H_static [in.]").' * u.in, u.m))); % [m]
+T_tunnel = data_sheet.("T_tunnel [deg C]").'; % [ºC]
 
 %% Variables
 % https://www.engineeringtoolbox.com/water-density-specific-weight-d_595.html
@@ -54,6 +54,8 @@ plot(regress_1_x, regress_1_y);
 hold off;
 legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
 grid on;
+saveas(gcf, ...
+    "../Figures/Dynamic Pressure vs Change in Static Pressure.svg");
 
 %% Calculate v_T
 v_T = sqrt(2 * q_T / rho_air); % [m/s]
@@ -76,3 +78,4 @@ plot(regress_2_x, regress_2_y);
 hold off;
 legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
 grid on;
+saveas(gcf, "../Figures/Test Chamber Velocity vs Motor Frequency.svg");
