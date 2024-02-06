@@ -1,16 +1,22 @@
-clear, clc, close all
+clear, clc, close all;
 
-in_2_m = 0.0254;
+u = symunit;
 
-%% Data Sheet
-Data_Sheet = readtable('AER E 344 Lab 02 Data Sheet.xlsx','VariableNamingRule','preserve');
-Motor_fr = Data_Sheet.("Motor speed [Hz]").';
-H_ref = Data_Sheet.("H_ref [in.]").' * in_2_m;
-H_A = Data_Sheet.("H_A [in.]").' * in_2_m;
-H_E = Data_Sheet.("H_E [in.]").' * in_2_m;
-H_total = Data_Sheet.("H_total [in.]").' * in_2_m;
-H_static = Data_Sheet.("H_static [in.]").' * in_2_m;
-T_tunnel = Data_Sheet.("T_tunnel [deg C]").';
+%% Import Data
+Data_Sheet = readtable('AER E 344 Lab 02 Data Sheet.xlsx', ...
+    'VariableNamingRule', 'preserve');
+Motor_fr = Data_Sheet.("Motor speed [Hz]").'; % [Hz]
+H_ref = double(separateUnits(unitConvert( ...
+    Data_Sheet.("H_ref [in.]").' * u.in, u.m))); % [m]
+H_A = double(separateUnits(unitConvert( ...
+    Data_Sheet.("H_A [in.]").' * u.in, u.m))); % [m]
+H_E = double(separateUnits(unitConvert( ...
+    Data_Sheet.("H_E [in.]").' * u.in, u.m))); % [m]
+H_total = double(separateUnits(unitConvert( ...
+    Data_Sheet.("H_total [in.]").' * u.in, u.m))); % [m]
+H_static = double(separateUnits(unitConvert( ...
+    Data_Sheet.("H_static [in.]").' * u.in, u.m))); % [m]
+T_tunnel = Data_Sheet.("T_tunnel [deg C]").'; % [ºC]
 
 %% Variables
 P_ref = 101325 * .9929; % N/m^2
