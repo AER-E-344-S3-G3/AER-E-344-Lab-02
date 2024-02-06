@@ -19,24 +19,24 @@ H_static = double(separateUnits(unitConvert( ...
 T_tunnel = Data_Sheet.("T_tunnel [deg C]").'; % [ºC]
 
 %% Variables
-P_ref = 101325 * .9929; % N/m^2
-p_water = 997.77; % kg / m^3
-p_air = 1.225; % kg / m^3
-g = 9.8; % m/s^2
+% https://www.engineeringtoolbox.com/water-density-specific-weight-d_595.html
+% Calculated @ 22.1ºC
+rho_water = 997.74; % [kg / m^3]
+% https://www.engineeringtoolbox.com/water-density-specific-weight-d_595.html
+% Calculated @ 22.1ºC
+rho_air = 1.195; % [kg / m^3]
+% https://physics.nist.gov/cgi-bin/cuu/Value?gn
+g = 9.80665; % [m / s^2]
 
-%% Calculate q_T & delta_p at each data point
-P_01T = P_ref - p_water * g * (H_total - H_ref);
-P_T = P_ref - p_water * g * (H_static - H_ref);
-q_T = P_01T - P_T;
+%% Calculate q_T & delta_P
+% q_T = P_0T - P_T
+q_T = rho_water * g * (H_static - H_total); % [Pa]
+delta_P = rho_water * g * (H_E - H_A); % [Pa]
 
-P_A = P_ref - p_water * g * (H_A - H_ref);
-P_E = P_ref - p_water * g * (H_E - H_ref);
-delta_p = P_A - P_E;
+K_array = q_T ./ delta_P;
 
-K_array = q_T ./ delta_p;
-
-v_T = sqrt((2 .* K_array .*delta_p)/p_air);
-q = 0.5 * p_air .* v_T.^2; 
+v_T = sqrt((2 .* K_array .*delta_P)/rho_air);
+q = 0.5 * rho_air .* v_T.^2; 
 
 %% Plot
 f1 = figure('Name', 'Motor Freq vs Air Velocity');
@@ -52,9 +52,9 @@ fprintf("Motor Freq vs Air Vel Slope = %f\n", regress(1))
 f2 = figure('Name', 'Delta P vs q');
 hold on
 q(1)=0;
-scatter(delta_p, q);
+scatter(delta_P, q);
 xlabel("Delta P")
 ylabel(".5*p*V^2")
-K = polyfit(delta_p,q,1);
-plot(delta_p, delta_p*K(1));
+K = polyfit(delta_P,q,1);
+plot(delta_P, delta_P*K(1));
 fprintf("K = %f\n", K(1))
