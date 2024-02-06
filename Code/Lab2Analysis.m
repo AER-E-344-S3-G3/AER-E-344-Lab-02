@@ -1,3 +1,5 @@
+% AER E 344 Spring 2024 Lab 02 Analysis
+% Section 3 Group 3
 clear, clc, close all;
 
 u = symunit;
@@ -5,7 +7,7 @@ u = symunit;
 %% Import Data
 Data_Sheet = readtable('AER E 344 Lab 02 Data Sheet.xlsx', ...
     'VariableNamingRule', 'preserve');
-Motor_fr = Data_Sheet.("Motor speed [Hz]").'; % [Hz]
+omega_motor = Data_Sheet.("Motor speed [Hz]").'; % [Hz]
 H_ref = double(separateUnits(unitConvert( ...
     Data_Sheet.("H_ref [in.]").' * u.in, u.m))); % [m]
 H_A = double(separateUnits(unitConvert( ...
@@ -28,33 +30,49 @@ rho_air = 1.195; % [kg / m^3]
 % https://physics.nist.gov/cgi-bin/cuu/Value?gn
 g = 9.80665; % [m / s^2]
 
-%% Calculate q_T & delta_P
+%% Calculate q_T & delta_p
 % q_T = P_0T - P_T
-q_T = rho_water * g * (H_static - H_total); % [Pa]
-delta_P = rho_water * g * (H_E - H_A); % [Pa]
+q_T = rho_water .* g .* (H_static - H_total); % [Pa]
+delta_p = rho_water .* g .* (H_E - H_A); % [Pa]
 
-K_array = q_T ./ delta_P;
+%% Calculate q_t vs. delta_p Regression
+regress_1 = polyfit(delta_p, q_T, 1);
+K = regress_1(1); % []
+regress_1_x = delta_p(1):0.1:delta_p(end); % [Pa]
+regress_1_y = K * regress_1_x + regress_1(2); % [Pa]
 
-v_T = sqrt((2 .* K_array .*delta_P)/rho_air);
-q = 0.5 * rho_air .* v_T.^2; 
+fprintf("K = %g []\n", K);
 
-%% Plot
-f1 = figure('Name', 'Motor Freq vs Air Velocity');
-hold on
-v_T(1) = 0;
-scatter(Motor_fr, v_T);
-xlabel("Motor Frequency (Hz)")
-ylabel("Air Velocity (m/s)")
-regress = polyfit(Motor_fr, v_T, 1);
-plot(Motor_fr, Motor_fr*regress(1));
-fprintf("Motor Freq vs Air Vel Slope = %f\n", regress(1))
+%% Plot q_t vs delta_p
+figure(1);
+scatter(delta_p, q_T);
+title("Dynamic Pressure vs Change in Static Pressure")
+xlabel("{\Delta}p [Pa]")
+ylabel("q_t [Pa]")
+hold on;
+plot(regress_1_x, regress_1_y);
+hold off;
+legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
+grid on;
 
-f2 = figure('Name', 'Delta P vs q');
-hold on
-q(1)=0;
-scatter(delta_P, q);
-xlabel("Delta P")
-ylabel(".5*p*V^2")
-K = polyfit(delta_P,q,1);
-plot(delta_P, delta_P*K(1));
-fprintf("K = %f\n", K(1))
+%% Calculate v_T
+v_T = sqrt(2 * q_T / rho_air); % [m/s]
+
+%% Calculate v_T vs omega_motor Regression
+regress_2 = polyfit(omega_motor, v_T, 1);
+regress_2_x = omega_motor(1):0.1:omega_motor(end); % [Hz]
+regress_2_y = regress_2(1) * regress_2_x + regress_2(2); % [m/s]
+
+fprintf("v_T = %G * omega_motor + %g\n", regress_2);
+
+%% Plot v_T vs omega_motor
+figure(2);
+scatter(omega_motor, v_T);
+title("Test Chamber Velocity vs Motor Frequency");
+xlabel("\omega_{motor} [Hz]");
+ylabel("v_T [m/s]");
+hold on;
+plot(regress_2_x, regress_2_y);
+hold off;
+legend("Experimental Data", "Line of Best Fit", "Location", "northwest");
+grid on;
