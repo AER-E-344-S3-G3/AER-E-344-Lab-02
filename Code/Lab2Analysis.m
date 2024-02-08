@@ -32,7 +32,6 @@ rho_air = 1.195; % [kg / m^3]
 g = 9.80665; % [m / s^2]
 
 %% Calculate q_T & delta_p
-% q_T = P_0T - P_T
 q_T = rho_water .* g .* (H_static - H_total); % [Pa]
 delta_p = rho_water .* g .* (H_E - H_A); % [Pa]
 
@@ -70,7 +69,7 @@ v_T = sqrt(2 * q_T / rho_air); % [m/s]
 %% Calculate v_T vs omega_motor Regression
 [regress_2, S_2] = polyfit(omega_motor, v_T, 1);
 regress_2_x = omega_motor(1):0.1:omega_motor(end); % [Hz]
-regress_2_y = regress_2(1) * regress_2_x + regress_2(2); % [m/s]
+regress_2_y = polyval(regress_2, regress_2_x); % [m/s]
 
 SStot_2 = sum((v_T - mean(v_T)).^2);
 SSres_2 = sum((v_T - polyval(regress_2, omega_motor)).^2);
