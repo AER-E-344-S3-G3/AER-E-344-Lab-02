@@ -20,6 +20,7 @@
 \usepackage{datetime} % Current date for titlepage and titleback
 \usepackage{tcolorbox} % Highlighted box
 \usepackage{subcaption} % For side-by-side figures
+\usepackage{indentfirst} % For paragraph indentation under chapter headings
 
 % Colors
 \colorlet{redreport}{red!50!black}
