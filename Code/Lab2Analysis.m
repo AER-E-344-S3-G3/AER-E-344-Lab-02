@@ -32,17 +32,22 @@ rho_air = 1.195; % [kg / m^3]
 g = 9.80665; % [m / s^2]
 
 %% Calculate q_T & delta_p
-% q_T = P_0T - P_T
 q_T = rho_water .* g .* (H_static - H_total); % [Pa]
 delta_p = rho_water .* g .* (H_E - H_A); % [Pa]
 
-%% Calculate q_t vs. delta_p Regression
-regress_1 = polyfit(delta_p, q_T, 1);
+%% Calculate q_T vs. delta_p Regression
+[regress_1, S_1] = polyfit(delta_p, q_T, 1);
 K = regress_1(1); % []
 regress_1_x = delta_p(1):0.1:delta_p(end); % [Pa]
-regress_1_y = K * regress_1_x + regress_1(2); % [Pa]
+regress_1_y = polyval(regress_1, regress_1_x); % [Pa]
 
-fprintf("K = %g []\n", K);
+SStot_1 = sum((q_T - mean(q_T)).^2);
+SSres_1 = sum((q_T - polyval(regress_1, delta_p)).^2);
+Rsq_1 = 1 - SSres_1 / SStot_1; % R^2 value
+
+fprintf("K = %g []\n" + ...
+    "R^2 (q_T vs. delta_p) = %g\n", ...
+    K, Rsq_1);
 
 %% Plot q_t vs delta_p
 figure(1);
@@ -62,11 +67,17 @@ saveas(gcf, ...
 v_T = sqrt(2 * q_T / rho_air); % [m/s]
 
 %% Calculate v_T vs omega_motor Regression
-regress_2 = polyfit(omega_motor, v_T, 1);
+[regress_2, S_2] = polyfit(omega_motor, v_T, 1);
 regress_2_x = omega_motor(1):0.1:omega_motor(end); % [Hz]
-regress_2_y = regress_2(1) * regress_2_x + regress_2(2); % [m/s]
+regress_2_y = polyval(regress_2, regress_2_x); % [m/s]
 
-fprintf("v_T = %G * omega_motor + %g\n", regress_2);
+SStot_2 = sum((v_T - mean(v_T)).^2);
+SSres_2 = sum((v_T - polyval(regress_2, omega_motor)).^2);
+Rsq_2 = 1 - SSres_2 / SStot_2; % R^2 value
+
+fprintf("v_T = %G * omega_motor + %g\n" + ...
+    "R^2 (v_T vs omega_motor) = %g\n", ...
+    regress_2, Rsq_2);
 
 %% Plot v_T vs omega_motor
 figure(2);

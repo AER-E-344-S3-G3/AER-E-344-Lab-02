@@ -1,4 +1,4 @@
-\chapter{Discussion}
+\chapter{Discussion} 
 \label{cp:discussion}
 From inspection of \autoref{fig:dynamic_pressure_graph}, the relationship between \gls{q_T} and \gls{DeltaP} is very linear, suggesting a direct relationship between the dynamic pressure in the test chamber, \gls{q_T}, and the change in pressure from points A and E, \gls{DeltaP}. After calculating a linear regression on this data using the \verb|polyfit()| function in \acrshort{matlab} (see \autoref{sec:determine_calibration_constant}), we confirmed that there is a strong direct relationship since the coefficient of determination, \gls{R^2}, is \num{0.9993}. From the linear regression, we were also able to determine the \gls{K}-coefficient, defined in \autoref{eq:K_def}. This coefficient allows us to calculate the dynamic pressure—and furthermore, the flow speed—in the test chamber given only the static pressure readings from points A and E.
 
