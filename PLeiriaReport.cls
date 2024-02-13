@@ -12,6 +12,7 @@
 \usepackage{graphicx} % Required for including images
 \usepackage{amsmath} % Mathematical expressions
 \usepackage{amssymb} % Mathematical symbols
+\usepackage{siunitx} % SI units and quantities
 \usepackage[dvipsnames]{xcolor} % Using colors within the document
 \usepackage{tocbibind} % Add list of figures and tables of contents
 \usepackage{blindtext} % Generate dummy text
@@ -20,6 +21,7 @@
 \usepackage{datetime} % Current date for titlepage and titleback
 \usepackage{tcolorbox} % Highlighted box
 \usepackage{subcaption} % For side-by-side figures
+\usepackage{indentfirst} % For paragraph indentation under chapter headings
 
 % Colors
 \colorlet{redreport}{red!50!black}
@@ -44,7 +46,7 @@
 \linespread{1.2} % Increase line spacing slightly
 
 % Glossary & Acronyms
-\usepackage[toc,acronym]{glossaries} 
+\usepackage[toc,acronym,sort=def]{glossaries} 
 % https://www.dickimaw-books.com/gallery/glossaries-styles/#tree-style
 % https://tex.stackexchange.com/questions/346681/space-between-acronym-entry-and-it-description
 \setglossarystyle{long} % Glossary style
@@ -250,3 +252,9 @@
   breaklines=true,
   breakanywhere=true
 }
+
+% Define new autoref label
+\renewcommand{\itemautorefname}{step}
+
+% Configure siunitx
+\sisetup{per-mode=symbol}
