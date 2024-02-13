@@ -1,6 +1,24 @@
 \chapter{Results}
 \label{cp:results}
-For the first part of the experiment, we needed to find the calibration constant ($K$). This was achieved by comparing the dynamic pressure and the pressure difference between Points $A$ and $E$. Through some equation manipulation, we determined that the slope obtained from the graph represents the calibration constant we are seeking. In this case, we found that $K$ equals 1.07907. \\
-{\it insert dynamic pressure vs change in static pressure graph} \par
-The next part of the lab involved utilizing the calibration constant to establish a relationship between the motor speed in Hz and the air velocity inside the wind tunnel. Subsequently, we derived a formula that correlates the air velocity ($v_T$) with the motor speed ($\omega _{motor}$), resulting in the equation $v_T = 1.32372 * \omega _{motor} - 0.430966$. Using this formula, one can input any motor speed to obtain a close estimate for the air speed in the wind tunnel. \\
-{\it insert v vs omega graph}
+
+\autoref{fig:dynamic_pressure_graph} shows the dynamic pressure in the test chamber, \gls{q_T}, as a function of the pressure differential, \gls{DeltaP}, between the static pressures measured at points A and E. The slope of this graph, defined as the calibration constant, \gls{K}, is \num{1.08}.
+
+\autoref{fig:velocity_graph} shows the airspeed in the test chamber, \gls{v_T}, as a function of the motor frequency, \gls{omega_motor}. This plot can be used to determine the approximate test chamber airspeed for a given motor frequency. By using the \verb|polyfit()| function in \acrshort{matlab} (see \autoref{sec:calc_velocity}), we calculated the linear regression to be
+
+\begin{equation}\label{eq:velocity_regression}
+    v_T = 1.32\omega_{motor}-0.431
+\end{equation}
+
+\begin{figure}[htpb]
+    \centering
+    \includesvg[width=0.9\linewidth]{Figures/Dynamic Pressure vs Change in Static Pressure.svg}
+    \caption[Plot of dynamic pressure vs. the pressure differential]{Plot of the dynamic pressure in the test chamber, $q_T$, vs. the pressure differential, $\Delta{}p$, between the static pressures measured at points A and E. The units of both axes are pascals.}
+    \label{fig:dynamic_pressure_graph}
+\end{figure}
+
+\begin{figure}[htpb]
+    \centering
+    \includesvg[width=0.9\linewidth]{Figures/Test Chamber Velocity vs Motor Frequency.svg}
+    \caption[Plot of test chamber velocity vs. the motor frequency]{Plot of the test chamber velocity, $v_T$, vs. the motor frequency, $\omega_{motor}$.}
+    \label{fig:velocity_graph}
+\end{figure}
